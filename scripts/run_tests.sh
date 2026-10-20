@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# Gestalt Test Runner with Per-Test Timeouts & Hang Prevention
+# ConstructAMe Test Runner with Per-Test Timeouts & Hang Prevention
 # ==============================================================================
 
 set -uo pipefail
@@ -30,7 +30,7 @@ FAILED=0
 FAILED_NAMES=()
 
 echo "=========================================================="
-echo "  Running Gestalt Test Suite (${TOTAL} suites)"
+echo "  Running ConstructAMe Test Suite (${TOTAL} suites)"
 echo "  Per-test timeout: ${TIMEOUT_SEC}s"
 echo "=========================================================="
 

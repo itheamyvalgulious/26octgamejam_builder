@@ -10,11 +10,15 @@ config_version=5
 
 [application]
 
-config/name="格式塔 (Gestalt)"
+config/name="构造一个我"
 config/description="生物机械构装解谜建筑游戏"
 run/main_scene="res://scenes/ui/MainMenu.tscn"
+config/use_custom_user_dir=true
+config/custom_user_dir_name="godot/app_userdata/格式塔 (Gestalt)"
 config/features=PackedStringArray("4.7", "Forward Plus")
 boot_splash/bg_color=Color(0.08, 0.09, 0.12, 1)
+config/custom_user_dir_name.windows="Godot/app_userdata/格式塔 (Gestalt)"
+config/custom_user_dir_name.macos="Godot/app_userdata/格式塔 (Gestalt)"
 
 [audio]
 

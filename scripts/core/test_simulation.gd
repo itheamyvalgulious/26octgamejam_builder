@@ -1,7 +1,7 @@
 extends SceneTree
 
 func _init() -> void:
-	print("=== RUNNING GESTALT SIMULATION TESTS ===")
+	print("=== RUNNING CONSTRUCT A ME SIMULATION TESTS ===")
 	test_inhibitor()
 	test_rotator_sum()
 	test_pusher_structure_and_diagonal()

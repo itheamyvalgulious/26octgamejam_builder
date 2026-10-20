@@ -19,15 +19,7 @@ func _ready() -> void:
 	_build_ui()
 
 func _build_ui() -> void:
-	var bg := TextureRect.new()
-	bg.texture = load("res://scenes/animation/background/mid.png")
-	bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	bg.stretch_mode = TextureRect.STRETCH_TILE
-	bg.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
-	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	bg.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
-	add_child(bg)
-	_add_background_frame()
+	UI.add_lab_background(self)
 
 	# Keep the title and the three primary actions centered as one group.
 	var center := CenterContainer.new()
@@ -87,35 +79,6 @@ func _build_ui() -> void:
 	settings_menu = SettingsMenu.new()
 	settings_menu.visible = false
 	add_child(settings_menu)
-
-func _add_background_frame() -> void:
-	# The background art is authored as 128px tiles: keep corners fixed and
-	# repeat the four edge strips so the frame remains correct at any window size.
-	_add_frame_piece("res://scenes/animation/background/left_up.png", 0, 128, 0, 128, false, 0.0, 0.0, 0.0, 0.0)
-	_add_frame_piece("res://scenes/animation/background/right_up.png", -128, 0, 0, 128, false, 1.0, 1.0, 0.0, 0.0)
-	_add_frame_piece("res://scenes/animation/background/left_low.png", 0, 128, -128, 0, false, 0.0, 0.0, 1.0, 1.0)
-	_add_frame_piece("res://scenes/animation/background/right_low.png", -128, 0, -128, 0, false, 1.0, 1.0, 1.0, 1.0)
-	_add_frame_piece("res://scenes/animation/background/horizontal edge_up.png", 128, -128, 0, 128, true, 0.0, 1.0, 0.0, 0.0)
-	_add_frame_piece("res://scenes/animation/background/horizontal edge_low.png", 128, -128, -128, 0, true, 0.0, 1.0, 1.0, 1.0)
-	_add_frame_piece("res://scenes/animation/background/Vertical edge_left.png", 0, 128, 128, -128, true, 0.0, 0.0, 0.0, 1.0)
-	_add_frame_piece("res://scenes/animation/background/Vertical edge_right.png", -128, 0, 128, -128, true, 1.0, 1.0, 0.0, 1.0)
-
-func _add_frame_piece(path: String, left: float, right: float, top: float, bottom: float, tiled: bool, anchor_left: float, anchor_right: float, anchor_top: float, anchor_bottom: float) -> void:
-	var piece := TextureRect.new()
-	piece.texture = load(path)
-	piece.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	piece.stretch_mode = TextureRect.STRETCH_TILE if tiled else TextureRect.STRETCH_SCALE
-	piece.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
-	piece.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	piece.anchor_left = anchor_left
-	piece.anchor_right = anchor_right
-	piece.anchor_top = anchor_top
-	piece.anchor_bottom = anchor_bottom
-	piece.offset_left = left
-	piece.offset_right = right
-	piece.offset_top = top
-	piece.offset_bottom = bottom
-	add_child(piece)
 
 func _button(parent: Node, text: String) -> Button:
 	var button := Button.new()

@@ -66,7 +66,7 @@ func _build_ui() -> void:
 	left_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	main_hbox.add_child(left_box)
 
-	description_label = UI.label(left_box, "", 14, Color.WHITE)
+	description_label = UI.label(left_box, "", 14, UI.TEXT)
 	description_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	description_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	description_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS

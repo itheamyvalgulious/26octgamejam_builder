@@ -38,20 +38,26 @@ func _init() -> void:
 	panel.set_anchors_and_offsets_preset(PRESET_BOTTOM_WIDE)
 	panel.offset_left = 330
 	panel.offset_right = -32
-	panel.offset_top = -320
+	panel.offset_top = -350
 	panel.offset_bottom = -84
-	panel.add_theme_stylebox_override("panel", UI.box(Color("132936"), UI.ACCENT, 14, 26))
+	panel.add_theme_stylebox_override("panel", UI.box(UI.PANEL, UI.BORDER, 0, 26))
 	add_child(panel)
 	var box := VBoxContainer.new()
 	box.add_theme_constant_override("separation", 14)
 	panel.add_child(box)
 	var header := HBoxContainer.new()
 	box.add_child(header)
-	speaker = UI.label(header, "塔洛斯", 22, UI.ACCENT)
-	speaker.size_flags_horizontal = SIZE_EXPAND_FILL
+	var nameplate := PanelContainer.new()
+	nameplate.add_theme_stylebox_override("panel", UI.box(UI.BORDER, UI.BORDER, 0, 14))
+	header.add_child(nameplate)
+	speaker = UI.label(nameplate, "塔洛斯", 22, Color("f1ffcc"))
+	var spacer := Control.new()
+	spacer.size_flags_horizontal = SIZE_EXPAND_FILL
+	header.add_child(spacer)
 	counter = UI.label(header, "", 14, UI.MUTED)
 	body = RichTextLabel.new()
 	body.add_theme_font_size_override("normal_font_size", 21)
+	body.add_theme_color_override("default_color", UI.TEXT)
 	body.size_flags_vertical = SIZE_EXPAND_FILL
 	body.custom_minimum_size.y = 110
 	body.gui_input.connect(func(event):
@@ -67,6 +73,7 @@ func _init() -> void:
 	var skip := Button.new()
 	skip_button = skip
 	skip.text = "直接实验"
+	skip.size_flags_vertical = SIZE_SHRINK_CENTER
 	skip.pressed.connect(close)
 	actions.add_child(skip)
 	next_button = Button.new()

@@ -97,7 +97,7 @@ func _build_ui() -> void:
 	var audio_tip := Label.new()
 	audio_tip.text = "调节背景音乐与游戏音效的音量大小。拖动滑动条即可即时试听音量变化。"
 	audio_tip.add_theme_font_size_override("font_size", 13)
-	audio_tip.add_theme_color_override("font_color", Color(0.7, 0.8, 0.9, 0.8))
+	audio_tip.add_theme_color_override("font_color", UI.MUTED)
 	audio_vbox.add_child(audio_tip)
 
 	# 1. 背景音乐音量 (BGM)
@@ -197,7 +197,7 @@ func _build_ui() -> void:
 	var preview_tip := Label.new()
 	preview_tip.text = "（点击试听按钮或拖动滑动条，均可实时聆听当前音效）"
 	preview_tip.add_theme_font_size_override("font_size", 13)
-	preview_tip.add_theme_color_override("font_color", Color(0.6, 0.7, 0.8, 0.7))
+	preview_tip.add_theme_color_override("font_color", UI.MUTED)
 	preview_row.add_child(preview_tip)
 
 	# -------------------------------------------------------------
@@ -211,7 +211,7 @@ func _build_ui() -> void:
 	tip_lbl = Label.new()
 	tip_lbl.text = "点击按键进行修改，按 Esc 取消修改。按键不可与其他操作冲突。"
 	tip_lbl.add_theme_font_size_override("font_size", 13)
-	tip_lbl.add_theme_color_override("font_color", Color(0.7, 0.8, 0.9, 0.8))
+	tip_lbl.add_theme_color_override("font_color", UI.MUTED)
 	keyboard_tab.add_child(tip_lbl)
 
 	var scroll := ScrollContainer.new()
@@ -232,7 +232,7 @@ func _build_ui() -> void:
 		var cat_lbl := Label.new()
 		cat_lbl.text = "【%s】" % cat
 		cat_lbl.add_theme_font_size_override("font_size", 14)
-		cat_lbl.add_theme_color_override("font_color", Color(0.4, 0.8, 1.0))
+		cat_lbl.add_theme_color_override("font_color", UI.TEXT)
 		list_vbox.add_child(cat_lbl)
 
 		for act_key in bindings.keys():
@@ -325,7 +325,7 @@ func _input(event: InputEvent) -> void:
 			listening_button = null
 			if tip_lbl != null:
 				tip_lbl.text = "点击按键进行修改，按 Esc 取消修改。按键不可与其他操作冲突。"
-				tip_lbl.add_theme_color_override("font_color", Color(0.7, 0.8, 0.9, 0.8))
+				tip_lbl.add_theme_color_override("font_color", UI.MUTED)
 			return
 
 		# Set new binding with conflict check

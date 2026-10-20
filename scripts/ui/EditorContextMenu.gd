@@ -15,10 +15,10 @@ func _init() -> void:
 	theme = UI.get_theme()
 
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.08, 0.12, 0.16, 0.96)
-	style.border_color = Color(0.22, 0.38, 0.48, 0.9)
+	style.bg_color = UI.PANEL
+	style.border_color = UI.BORDER
 	style.set_border_width_all(1)
-	style.set_corner_radius_all(8)
+	style.set_corner_radius_all(0)
 	style.content_margin_left = 6
 	style.content_margin_right = 6
 	style.content_margin_top = 6
@@ -79,7 +79,7 @@ func _build_items() -> void:
 		var lbl_text := Label.new()
 		lbl_text.text = item["label"]
 		lbl_text.add_theme_font_size_override("font_size", 14)
-		lbl_text.add_theme_color_override("font_color", Color(0.92, 0.96, 0.98)) # High contrast
+		lbl_text.add_theme_color_override("font_color", UI.TEXT) # High contrast
 		hbox.add_child(lbl_text)
 
 		var spacer := Control.new()
@@ -91,7 +91,7 @@ func _build_items() -> void:
 		lbl_shortcut.name = "ShortcutLabel"
 		lbl_shortcut.add_theme_font_size_override("font_size", 13)
 		# 快捷键部分相比文字部分对比度更低一点
-		lbl_shortcut.add_theme_color_override("font_color", Color(0.55, 0.68, 0.76))
+		lbl_shortcut.add_theme_color_override("font_color", UI.MUTED)
 		hbox.add_child(lbl_shortcut)
 
 		btn.pressed.connect(func():

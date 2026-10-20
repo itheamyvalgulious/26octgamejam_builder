@@ -81,10 +81,10 @@ class SaveDialog extends PanelContainer:
 	func _init(has_selection: bool) -> void:
 		custom_minimum_size = Vector2(420, 240)
 		var style := StyleBoxFlat.new()
-		style.bg_color = Color(0.09, 0.13, 0.18, 0.96)
-		style.border_color = Color(0.3, 0.6, 0.9, 0.9)
+		style.bg_color = UI.PANEL
+		style.border_color = UI.BORDER
 		style.set_border_width_all(2)
-		style.set_corner_radius_all(12)
+		style.set_corner_radius_all(0)
 		style.content_margin_left = 24
 		style.content_margin_right = 24
 		style.content_margin_top = 20
@@ -98,7 +98,7 @@ class SaveDialog extends PanelContainer:
 		var title := Label.new()
 		title.text = "保存构装图纸 (Blueprint)"
 		title.add_theme_font_size_override("font_size", 18)
-		title.add_theme_color_override("font_color", Color(0.4, 0.8, 1.0))
+		title.add_theme_color_override("font_color", UI.TEXT)
 		vbox.add_child(title)
 
 		var hint := Label.new()
@@ -152,10 +152,10 @@ class LoadDialog extends PanelContainer:
 	func _init() -> void:
 		custom_minimum_size = Vector2(460, 380)
 		var style := StyleBoxFlat.new()
-		style.bg_color = Color(0.09, 0.13, 0.18, 0.96)
-		style.border_color = Color(0.3, 0.8, 0.5, 0.9)
+		style.bg_color = UI.PANEL
+		style.border_color = UI.BORDER
 		style.set_border_width_all(2)
-		style.set_corner_radius_all(12)
+		style.set_corner_radius_all(0)
 		style.content_margin_left = 24
 		style.content_margin_right = 24
 		style.content_margin_top = 20
@@ -169,7 +169,7 @@ class LoadDialog extends PanelContainer:
 		var title := Label.new()
 		title.text = "读取构装图纸 (Load Blueprint)"
 		title.add_theme_font_size_override("font_size", 18)
-		title.add_theme_color_override("font_color", Color(0.3, 1.0, 0.6))
+		title.add_theme_color_override("font_color", UI.ACCENT)
 		vbox.add_child(title)
 
 		item_list = ItemList.new()

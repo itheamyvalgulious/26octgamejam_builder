@@ -251,8 +251,8 @@ func _build_ui_layout() -> void:
 	var top_panel := PanelContainer.new()
 	top_panel.theme = UI.get_game_theme()
 	var top_style := StyleBoxFlat.new()
-	top_style.bg_color = Color("102a35")
-	top_style.border_color = Color("2f7380")
+	top_style.bg_color = UI.PANEL
+	top_style.border_color = UI.BORDER
 	top_style.set_corner_radius_all(0)
 	top_style.set_border_width_all(1)
 	top_style.content_margin_left = 16
@@ -284,7 +284,7 @@ func _build_ui_layout() -> void:
 	level_title_label = Label.new()
 	level_title_label.text = "关卡标题"
 	level_title_label.add_theme_font_size_override("font_size", 15)
-	level_title_label.add_theme_color_override("font_color", Color(0.3, 0.9, 1.0))
+	level_title_label.add_theme_color_override("font_color", UI.TEXT)
 	row1_hbox.add_child(level_title_label)
 	var frame_btn := Button.new()
 	frame_btn.text = "全景"
@@ -306,7 +306,7 @@ func _build_ui_layout() -> void:
 	goal_label = Label.new()
 	goal_label.text = "[目标] 污染源剩余: 0 | 待回收宝藏: 0"
 	goal_label.add_theme_font_size_override("font_size", 14)
-	goal_label.add_theme_color_override("font_color", Color(1.0, 0.85, 0.3))
+	goal_label.add_theme_color_override("font_color", UI.ACCENT)
 	row1_hbox.add_child(goal_label)
 
 	# --- Row 2: Blueprint Management & Simulation Controls ---
@@ -416,11 +416,15 @@ func _build_ui_layout() -> void:
 	speed_label = Label.new()
 	speed_label.text = "1.0x"
 	speed_hbox.add_child(speed_label)
+	# The primary action determines row height; secondary controls stay compact.
+	for button in [clear_btn, save_btn, load_btn, step_btn, reset_btn]:
+		button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	speed_hbox.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row2_hbox.move_child(play_btn, 0)
 	row2_hbox.move_child(step_btn, 1)
 	row2_hbox.move_child(reset_btn, 2)
 	row2_hbox.move_child(sep_sim, 3)
-	status_label = UI.label(top_vbox, "构装中 · 在绿色区域内放置方块", 14, Color("9fc4ca"))
+	status_label = UI.label(top_vbox, "构装中 · 在绿色区域内放置方块", 14, UI.MUTED)
 	clear_confirm = ConfirmationDialog.new()
 	clear_confirm.theme = UI.get_game_theme()
 	clear_confirm.title = "清空当前构装？"
@@ -436,8 +440,8 @@ func _build_ui_layout() -> void:
 	toolbar.name = "Toolbar"
 	toolbar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var btm_style := StyleBoxFlat.new()
-	btm_style.bg_color = Color("102a35")
-	btm_style.border_color = Color("2f7380")
+	btm_style.bg_color = UI.PANEL
+	btm_style.border_color = UI.BORDER
 	btm_style.set_corner_radius_all(0)
 	btm_style.set_border_width_all(1)
 	btm_style.set_corner_radius_all(8)
@@ -467,8 +471,8 @@ func _build_ui_layout() -> void:
 	tutorial_guide.set_anchors_and_offsets_preset(PRESET_TOP_RIGHT)
 	tutorial_guide.offset_left = -336
 	tutorial_guide.offset_right = -16
-	tutorial_guide.offset_top = 148
-	tutorial_guide.offset_bottom = 148
+	tutorial_guide.offset_top = 170
+	tutorial_guide.offset_bottom = 170
 	tutorial_guide.restart_requested.connect(func():
 		if not is_animating_tick and tutorial_transition.is_empty(): _apply_level_data(current_level_data)
 	)

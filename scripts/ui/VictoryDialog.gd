@@ -14,10 +14,10 @@ func _init() -> void:
 	theme = UI.get_theme()
 	custom_minimum_size = Vector2(540, 280)
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.08, 0.12, 0.18, 0.95)
-	style.border_color = Color(0.1, 0.9, 0.6, 0.9)
+	style.bg_color = UI.PANEL
+	style.border_color = UI.BORDER
 	style.set_border_width_all(3)
-	style.set_corner_radius_all(16)
+	style.set_corner_radius_all(0)
 	style.content_margin_left = 32
 	style.content_margin_right = 32
 	style.content_margin_top = 28
@@ -32,7 +32,7 @@ func _init() -> void:
 	title_label.text = "构装成功"
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title_label.add_theme_font_size_override("font_size", 24)
-	title_label.add_theme_color_override("font_color", Color(0.2, 1.0, 0.7))
+	title_label.add_theme_color_override("font_color", UI.ACCENT)
 	vbox.add_child(title_label)
 
 	details_label = Label.new()
@@ -50,7 +50,8 @@ func _init() -> void:
 
 	var replay_btn := Button.new()
 	replay_btn.text = "重新调整"
-	replay_btn.custom_minimum_size = Vector2(100, 42)
+	replay_btn.custom_minimum_size = Vector2(100, 40)
+	replay_btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	replay_btn.pressed.connect(func():
 		visible = false
 		replay_pressed.emit()
@@ -59,7 +60,8 @@ func _init() -> void:
 
 	var list_btn := Button.new()
 	list_btn.text = "章节地图"
-	list_btn.custom_minimum_size = Vector2(100, 42)
+	list_btn.custom_minimum_size = Vector2(100, 40)
+	list_btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	list_btn.pressed.connect(func():
 		visible = false
 		level_select_pressed.emit()

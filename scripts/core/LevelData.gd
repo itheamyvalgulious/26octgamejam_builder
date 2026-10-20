@@ -4,7 +4,7 @@ extends RefCounted
 var level_id: String = ""
 var level_name: String = "新关卡"
 var description: String = "完成关卡任务：摧毁所有污染源，将所有宝藏回收至建造区。"
-var author: String = "格式塔工匠"
+var author: String = "构造一个我工匠"
 var cg_theme: String = "cyan_core"
 var order_index: int = 0
 var tutorial: Dictionary = {} # Optional guided lesson; preserved by the level editor.

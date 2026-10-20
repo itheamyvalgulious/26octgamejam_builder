@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Gestalt (格式塔) - Vector SVG Asset Generator
+构造一个我 - Vector SVG Asset Generator
 Generates clean, bio-mechanical vector SVGs for all block types, variants, and UI icons.
 Easily editable, resolution independent, and version-controllable.
 """

@@ -172,8 +172,8 @@ func _build_ui() -> void:
 	var top_panel := PanelContainer.new()
 	top_panel.theme = UI.get_game_theme()
 	var top_style := StyleBoxFlat.new()
-	top_style.bg_color = Color(0.08, 0.1, 0.14, 0.95)
-	top_style.border_color = Color(0.2, 0.35, 0.5, 0.8)
+	top_style.bg_color = UI.PANEL
+	top_style.border_color = UI.BORDER
 	top_style.set_border_width_all(1)
 	top_style.content_margin_left = 16
 	top_style.content_margin_right = 16
@@ -204,7 +204,7 @@ func _build_ui() -> void:
 	level_name_lbl = Label.new()
 	level_name_lbl.text = "【关卡编辑】"
 	level_name_lbl.add_theme_font_size_override("font_size", 15)
-	level_name_lbl.add_theme_color_override("font_color", Color(0.2, 0.9, 0.8))
+	level_name_lbl.add_theme_color_override("font_color", UI.TEXT)
 	row1_hbox.add_child(level_name_lbl)
 
 	var spacer := Control.new()
@@ -214,7 +214,7 @@ func _build_ui() -> void:
 	build_area_info_lbl = Label.new()
 	build_area_info_lbl.text = "建造区: 全图允许"
 	build_area_info_lbl.add_theme_font_size_override("font_size", 14)
-	build_area_info_lbl.add_theme_color_override("font_color", Color(0.2, 0.9, 0.5))
+	build_area_info_lbl.add_theme_color_override("font_color", UI.ACCENT)
 	row1_hbox.add_child(build_area_info_lbl)
 
 	# Build area visual edit tools
@@ -228,7 +228,7 @@ func _build_ui() -> void:
 		is_editing_build_area = pressed
 		if pressed:
 			set_build_area_btn.text = "拖拽网格以设定..."
-			set_build_area_btn.modulate = Color(0.3, 1.0, 0.6)
+			set_build_area_btn.modulate = UI.ACCENT
 		else:
 			set_build_area_btn.text = "框选建造区"
 			set_build_area_btn.modulate = Color(1.0, 1.0, 1.0)
@@ -357,8 +357,8 @@ func _build_ui() -> void:
 	toolbar.name = "Toolbar"
 	toolbar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var btm_style := StyleBoxFlat.new()
-	btm_style.bg_color = Color(0.08, 0.1, 0.14, 0.95)
-	btm_style.border_color = Color(0.2, 0.35, 0.5, 0.8)
+	btm_style.bg_color = UI.PANEL
+	btm_style.border_color = UI.BORDER
 	btm_style.set_border_width_all(1)
 	btm_style.set_corner_radius_all(8)
 	btm_style.content_margin_left = 12
