@@ -35,6 +35,7 @@ var inhibited_sprite: Sprite2D
 var border_node: Node2D
 
 var _current_tween: Tween
+var _rotation_tween: Tween
 var _pushing := false
 var _inhibit_anim_time := 0.0
 
@@ -311,7 +312,13 @@ func animate_rotation(new_dir: int, duration: float) -> void:
 	var diff := wrapf(target_angle - current_angle, -PI, PI)
 	var end_angle := current_angle + diff
 
+	# 旋转与移动并行后，同一 tick 内可能再次触发旋转：终止旧补间，
+	# 让新补间从当前角度连续过渡，避免两个补间互相拉扯。
+	if _rotation_tween != null and _rotation_tween.is_valid():
+		_rotation_tween.kill()
+	# 所有可见部件在同一相位内同步旋转（并行），相位结束时统一吸附到精确角度。
 	var t := create_tween()
+	t.set_parallel(true)
 	t.tween_property(inner_sprite, "rotation", end_angle, duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	for artwork in [pusher_artwork, monster_artwork, rotator_artwork, replicator_artwork, pollution_artwork, hard_artwork]:
 		if artwork != null and artwork.visible:
@@ -319,7 +326,7 @@ func animate_rotation(new_dir: int, duration: float) -> void:
 			if artwork == monster_artwork:
 				artwork_angle = monster_artwork.get_direction_rotation(new_dir)
 			t.tween_property(artwork, "rotation", artwork_angle, duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	t.tween_callback(func():
+	t.chain().tween_callback(func():
 		var final_angle := posmod(new_dir, 4) * (PI / 2.0)
 		inner_sprite.rotation = final_angle
 		pusher_artwork.rotation = final_angle
@@ -330,6 +337,7 @@ func animate_rotation(new_dir: int, duration: float) -> void:
 		hard_artwork.rotation = final_angle
 		treasure_artwork.rotation = 0.0
 	)
+	_rotation_tween = t
 
 func animate_spawn(duration: float) -> void:
 	scale = Vector2(0.1, 0.1)
@@ -355,6 +363,10 @@ func play_pusher_push() -> void:
 	if block_data == null or block_data.block_type != BlockData.Type.PUSHER:
 		return
 	_pushing = true
+	# 本步既被旋转又推进时（推进-旋转次序），推进立即采用新朝向：
+	# 终止旋转补间，避免它在后续帧把朝向再拉回旧角度。
+	if _rotation_tween != null and _rotation_tween.is_valid():
+		_rotation_tween.kill()
 	pusher_artwork.set_direction(block_data.direction)
 	update_appearance()
 	pusher_artwork.play_push()

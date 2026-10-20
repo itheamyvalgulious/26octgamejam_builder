@@ -410,11 +410,12 @@ func get_multi_ghost_blocks_to_place(mouse_grid: Vector2i) -> Array[BlockData]:
 # Tick Animation Player
 # -------------------------------------------------------------
 func play_tick_animation(result: SimulationEngine.TickResult, duration: float, on_finish: Callable) -> void:
-	# Keep one tick's total duration unchanged, but reserve its first part for
-	# rotator animation. Movement starts only after that visual phase ends.
+	# 步长一致修复：无论本步是否发生旋转，移动与各特效动画都从 tick 起点开始、
+	# 恰好铺满整个步时长；旋转动画与移动并行、只占 tick 的前 40%（方块先转完、
+	# 再保持新朝向继续滑行）。这样每一步的可见移动时长与移动速度完全一致，
+	# 节拍恒定，不再出现"有旋转的那步移动被压短"的步长不均。
 	var has_rotation := not result.rotated_blocks.is_empty()
 	var rotation_duration := duration * 0.4 if has_rotation else 0.0
-	var movement_duration := maxf(duration - rotation_duration, 0.0)
 
 	# 1. Rotations: only targets actually affected by a rotator are animated.
 	for rot in result.rotated_blocks:
@@ -427,14 +428,9 @@ func play_tick_animation(result: SimulationEngine.TickResult, duration: float, o
 		if source_view != null:
 			source_view.play_rotator_turn(rotation_duration)
 
-	var start_movement := func() -> void:
-		_play_movement_and_effects(result, movement_duration)
-	if rotation_duration > 0.0:
-		var gate := create_tween()
-		gate.tween_interval(rotation_duration)
-		gate.tween_callback(start_movement)
-	else:
-		start_movement.call()
+	# 2. Movement & effects span the FULL tick duration on every step
+	#    (no gating delay), so each step's stride takes exactly equal time.
+	_play_movement_and_effects(result, duration)
 
 	# Wait duration then call on_finish
 	var t := create_tween()
