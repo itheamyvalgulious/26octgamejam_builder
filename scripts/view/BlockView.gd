@@ -190,11 +190,12 @@ func _process(delta: float) -> void:
 func _refresh_inhibitor_state() -> void:
 	if inhibitor_artwork == null or block_data.block_type != BlockData.Type.INHIBITOR or grid_world == null:
 		return
-	# The displayed direction is the suppression direction. The inhibitor
-	# senses the opposite side and suppresses the block in its own direction.
-	var suppression_vec := block_data.get_forward_vec()
-	var has_suppressed_block := grid_world.get_block(block_data.grid_pos + suppression_vec) != null
-	var has_sensed_block := grid_world.get_block(block_data.grid_pos - suppression_vec) != null
+	# The block direction is the sensing (detector) direction; the inhibitor
+	# suppresses the block on the opposite side. The artwork is rotated 180°
+	# so it visually faces the suppression (rear) side.
+	var sensing_vec := block_data.get_forward_vec()
+	var has_sensed_block := grid_world.get_block(block_data.grid_pos + sensing_vec) != null
+	var has_suppressed_block := grid_world.get_block(block_data.grid_pos - sensing_vec) != null
 	inhibitor_artwork.refresh_state(has_suppressed_block, has_sensed_block, block_data.is_inhibited)
 
 func _get_texture_path() -> String:
@@ -247,7 +248,8 @@ func _on_border_draw() -> void:
 
 	var sid := block_data.structure_id
 	var half := HALF_CELL - 2.0
-	var border_color := Color(0.2, 0.7, 0.9, 0.85) if sid > 0 else Color(0.3, 0.4, 0.5, 0.6)
+	# 结构编组边框为橙色（未编组保持灰色细线）
+	var border_color := Color(1.0, 0.55, 0.1, 0.85) if sid > 0 else Color(0.3, 0.4, 0.5, 0.6)
 	var width := 3.0 if sid > 0 else 2.0
 
 	# Check 4 neighbors

@@ -100,9 +100,10 @@ func refresh_state(has_rear_block: bool, has_front_block: bool, is_self_inhibite
 			_set_strip("res://scenes/animation/Invalidate_idle(1).png", IDLE_FRAMES)
 
 func set_direction(direction: int) -> void:
-	# The block direction is the suppression direction.  The eye, displayed
-	# artwork, and actual inhibition target all point to the same side.
-	rotation = posmod(direction, 4) * (PI / 2.0)
+	# The block direction is the sensing (detector) direction; the suppression
+	# output is the opposite side. Rotate the artwork 180° so the displayed
+	# art faces the actual suppression target (the rear side).
+	rotation = posmod(direction + 2, 4) * (PI / 2.0)
 
 func _set_strip(path: String, frame_count: int) -> void:
 	if body.texture != null and body.texture.resource_path == path and body.hframes == frame_count:

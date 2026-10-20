@@ -115,37 +115,35 @@ func step_tick() -> TickResult:
 	var snap := world.clone()
 
 	# -------------------------------------------------------------
-	# 1. Rotators (转向器)
+	# 1. Reset Transient Inhibition & Calculate Active Inhibitors
+	# -------------------------------------------------------------
+	_simulate_inhibitors(snap, result)
+
+	# -------------------------------------------------------------
+	# 2. Rotators (转向器)
 	# -------------------------------------------------------------
 	_simulate_rotators(snap, result)
 
 	# -------------------------------------------------------------
-	# 2. Pushers (推动器) & Structure Movement
+	# 3. Pushers (推动器) & Structure Movement
 	# -------------------------------------------------------------
 	var consumed_by_destroyer: Dictionary = {}
 	var pusher_destinations := _simulate_pushers(snap, result, consumed_by_destroyer)
 
 	# -------------------------------------------------------------
-	# 3. Wanderers (游荡怪物)
+	# 4. Wanderers (游荡怪物)
 	# -------------------------------------------------------------
 	var wanderers_attacked := _simulate_wanderers(snap, result, pusher_destinations)
 
 	# -------------------------------------------------------------
-	# 4. Replicators (复制器)
+	# 5. Replicators (复制器)
 	# -------------------------------------------------------------
 	_simulate_replicators(snap, result)
 
 	# -------------------------------------------------------------
-	# 5. Destroyers (摧毁器) & Simultaneous Clash Resolution
+	# 6. Destroyers (摧毁器) & Simultaneous Clash Resolution
 	# -------------------------------------------------------------
 	_simulate_destroyers(snap, result, wanderers_attacked, consumed_by_destroyer)
-
-	# -------------------------------------------------------------
-	# 6. Inhibition is evaluated after all other machines have run.
-	# Use the resulting world, rather than the pristine t0 snapshot, so moved,
-	# spawned, and removed blocks are reflected in the detector's final layout.
-	# -------------------------------------------------------------
-	_simulate_inhibitors(world, result)
 
 	# -------------------------------------------------------------
 	# 7. Check Treasure Collection & Victory
@@ -171,9 +169,8 @@ func _simulate_inhibitors(snap: GridWorld, result: TickResult) -> void:
 	for sb in all_snap_blocks:
 		block_by_id[sb.block_id] = sb
 
-	# Key: inhibitor block_id -> target block_id (sensed side occupied and
-	# suppression side occupied). The target follows the displayed direction.
-	# Key: block_id -> Array[int] (ids of sensing inhibitors targeting this block)
+	# Key: inhibitor block_id -> target block_id (if front has block and rear has block)
+	# Key: block_id -> Array[int] (ids of sensing inhibitors pointing to this block)
 	var inhibitor_targets: Dictionary = {} # int -> int
 	var incoming_inhibitors: Dictionary = {} # int -> Array[int]
 
@@ -182,11 +179,11 @@ func _simulate_inhibitors(snap: GridWorld, result: TickResult) -> void:
 
 	for sb in all_snap_blocks:
 		if sb.block_type == BlockData.Type.INHIBITOR:
-			var sensed_pos := sb.grid_pos + sb.get_backward_vec()
-			# The opposite block is sensed; the forward/displayed direction is suppressed.
-			if snap.has_block(sensed_pos):
-				var suppressed_pos := sb.grid_pos + sb.get_forward_vec()
-				var target_b := snap.get_block(suppressed_pos)
+			var front_pos := sb.grid_pos + sb.get_forward_vec()
+			# Does this inhibitor detect any block in front at t0?
+			if snap.has_block(front_pos):
+				var rear_pos := sb.grid_pos + sb.get_backward_vec()
+				var target_b := snap.get_block(rear_pos)
 				if target_b != null:
 					inhibitor_targets[sb.block_id] = target_b.block_id
 					if incoming_inhibitors.has(target_b.block_id):

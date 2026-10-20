@@ -464,7 +464,19 @@ func _play_movement_and_effects(result: SimulationEngine.TickResult, duration: f
 		if v != null:
 			v.animate_damage(duration)
 
-	# 4. Spawns
+	# 4. Inhibitions: refreshed before spawns/destructions, matching the
+	# simulation order where inhibition resolves first, before other machines.
+	for v in _views.values():
+		var was_inhibited: bool = v.inhibited_sprite.visible
+		var is_now_inhibited: bool = v.block_data.is_inhibited
+		v.inhibited_sprite.visible = is_now_inhibited
+		v._refresh_inhibitor_state()
+		if not was_inhibited and is_now_inhibited:
+			SoundManager.play_block_inhibitor_engage(v.global_position)
+		elif was_inhibited and not is_now_inhibited:
+			SoundManager.play_block_inhibitor_release(v.global_position)
+
+	# 5. Spawns
 	for spawned_block in result.spawned_blocks:
 		var v := get_view(spawned_block.block_id)
 		if v == null:
@@ -477,7 +489,7 @@ func _play_movement_and_effects(result: SimulationEngine.TickResult, duration: f
 				if source_view != null:
 					source_view.play_replicator_breed(duration)
 
-	# 5. Destructions & Collections
+	# 6. Destructions & Collections
 	for action in result.destroyer_actions:
 		var destroyer_id: int = action["id"]
 		var target_id: int = action["target_id"]
@@ -507,15 +519,3 @@ func _play_movement_and_effects(result: SimulationEngine.TickResult, duration: f
 					v.queue_free()
 			)
 			_views.erase(tr_block.block_id)
-
-	# 6. Inhibitions: refresh only after every other machine result has been
-	# scheduled, matching the post-action simulation order.
-	for v in _views.values():
-		var was_inhibited: bool = v.inhibited_sprite.visible
-		var is_now_inhibited: bool = v.block_data.is_inhibited
-		v.inhibited_sprite.visible = is_now_inhibited
-		v._refresh_inhibitor_state()
-		if not was_inhibited and is_now_inhibited:
-			SoundManager.play_block_inhibitor_engage(v.global_position)
-		elif was_inhibited and not is_now_inhibited:
-			SoundManager.play_block_inhibitor_release(v.global_position)

@@ -142,7 +142,7 @@
       "type": 3.0
     },
     {
-      "dir": 2.0,
+      "dir": 0.0,
       "hp": 2.0,
       "id": 156370.0,
       "is_world_block": true,
@@ -156,7 +156,7 @@
       "type": 1.0
     },
     {
-      "dir": 0.0,
+      "dir": 2.0,
       "hp": 2.0,
       "id": 156371.0,
       "is_world_block": true,
@@ -198,7 +198,7 @@
       "type": 0.0
     },
     {
-      "dir": 0.0,
+      "dir": 2.0,
       "hp": 2.0,
       "id": 156374.0,
       "is_world_block": true,
@@ -268,7 +268,7 @@
       "type": 4.0
     },
     {
-      "dir": 3.0,
+      "dir": 1.0,
       "hp": 2.0,
       "id": 156379.0,
       "is_world_block": true,
@@ -324,7 +324,7 @@
       "type": 0.0
     },
     {
-      "dir": 3.0,
+      "dir": 1.0,
       "hp": 2.0,
       "id": 156383.0,
       "is_world_block": true,
@@ -380,7 +380,7 @@
       "type": 6.0
     },
     {
-      "dir": 3.0,
+      "dir": 1.0,
       "hp": 2.0,
       "id": 156387.0,
       "is_world_block": true,
@@ -394,7 +394,7 @@
       "type": 1.0
     },
     {
-      "dir": 2.0,
+      "dir": 0.0,
       "hp": 2.0,
       "id": 156388.0,
       "is_world_block": true,
@@ -408,7 +408,7 @@
       "type": 1.0
     },
     {
-      "dir": 0.0,
+      "dir": 2.0,
       "hp": 2.0,
       "id": 156389.0,
       "is_world_block": true,
@@ -422,7 +422,7 @@
       "type": 1.0
     },
     {
-      "dir": 3.0,
+      "dir": 1.0,
       "hp": 2.0,
       "id": 156390.0,
       "is_world_block": true,
