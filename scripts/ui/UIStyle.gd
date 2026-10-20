@@ -71,6 +71,11 @@ static func get_theme() -> Theme:
 	shared_theme.set_stylebox("panel", "ItemList", box(INPUT))
 	shared_theme.set_stylebox("selected", "ItemList", box(Color("b2e783"), ACCENT))
 	shared_theme.set_stylebox("selected_focus", "ItemList", box(Color("b2e783"), ACCENT))
+	# 悬停反转配色：背景换成正文字色，文字换成列表底色，避免默认白底白字看不见。
+	shared_theme.set_stylebox("hovered", "ItemList", box(TEXT, BORDER))
+	shared_theme.set_stylebox("hovered_selected", "ItemList", box(TEXT, ACCENT))
+	shared_theme.set_color("font_hovered_color", "ItemList", INPUT)
+	shared_theme.set_color("font_hovered_selected_color", "ItemList", INPUT)
 	shared_theme.set_stylebox("panel", "TooltipPanel", box(INPUT))
 	shared_theme.set_color("font_color", "TooltipLabel", TEXT)
 	shared_theme.set_font_size("font_size", "TooltipLabel", 15)

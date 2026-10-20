@@ -345,7 +345,6 @@ func _build_ui_layout() -> void:
 
 	# Sim control buttons
 	play_btn = Button.new()
-	UI.game_primary(play_btn)
 	play_btn.text = "开始 [空格]"
 	play_btn.focus_mode = Control.FOCUS_NONE
 	play_btn.custom_minimum_size = Vector2(96, 32)
@@ -416,8 +415,8 @@ func _build_ui_layout() -> void:
 	speed_label = Label.new()
 	speed_label.text = "1.0x"
 	speed_hbox.add_child(speed_label)
-	# The primary action determines row height; secondary controls stay compact.
-	for button in [clear_btn, save_btn, load_btn, step_btn, reset_btn]:
+	# Row 2 所有控件统一高度，保持单行紧凑。
+	for button in [play_btn, clear_btn, save_btn, load_btn, step_btn, reset_btn]:
 		button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	speed_hbox.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row2_hbox.move_child(play_btn, 0)

@@ -290,7 +290,6 @@ func _build_ui() -> void:
 	row2_hbox.add_child(load_machine_btn)
 
 	save_level_btn = Button.new()
-	UI.game_primary(save_level_btn)
 	save_level_btn.text = "保存关卡"
 	save_level_btn.focus_mode = Control.FOCUS_NONE
 	save_level_btn.custom_minimum_size = Vector2(80, 32)
