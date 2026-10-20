@@ -611,7 +611,7 @@ const htmlContent = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>《格式塔 (Gestalt)》音效试听选型面板 (第3版更新)</title>
+  <title>《构造一个我》音效试听选型面板 (第3版更新)</title>
   <style>
     :root {
       --bg: #111a21;
@@ -827,7 +827,7 @@ const htmlContent = `<!DOCTYPE html>
   <div class="container">
     <header>
       <h1>
-        格式塔 (Gestalt) - 音效试听选型面板
+        构造一个我 - 音效试听选型面板
         <span class="badge">第3轮聚焦微调</span>
       </h1>
       <p class="subtitle">

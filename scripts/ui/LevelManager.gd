@@ -41,10 +41,7 @@ func _ready() -> void:
 
 func _build_ui() -> void:
 	# Background
-	var bg := ColorRect.new()
-	bg.color = Color(0.06, 0.08, 0.11, 1.0)
-	bg.set_anchors_preset(PRESET_FULL_RECT)
-	add_child(bg)
+	UI.add_lab_background(self)
 
 	var main_vbox := VBoxContainer.new()
 	add_child(main_vbox)
@@ -72,7 +69,7 @@ func _build_ui() -> void:
 	var title_lbl := Label.new()
 	title_lbl.text = "创作工坊 / 关卡管理"
 	title_lbl.add_theme_font_size_override("font_size", 24)
-	title_lbl.add_theme_color_override("font_color", Color(0.2, 0.9, 0.8))
+	title_lbl.add_theme_color_override("font_color", UI.TEXT)
 	header_hbox.add_child(title_lbl)
 
 	# Split view: Left = Level list with reordering; Right = Level properties
@@ -90,7 +87,7 @@ func _build_ui() -> void:
 	var list_header := Label.new()
 	list_header.text = "关卡列表 (可上下调整顺序)"
 	list_header.add_theme_font_size_override("font_size", 16)
-	list_header.add_theme_color_override("font_color", Color(0.5, 0.8, 1.0))
+	list_header.add_theme_color_override("font_color", UI.TEXT)
 	left_vbox.add_child(list_header)
 
 	level_item_list = ItemList.new()
@@ -165,7 +162,7 @@ func _build_ui() -> void:
 
 	io_status_lbl = Label.new()
 	io_status_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	io_status_lbl.add_theme_color_override("font_color", Color(0.5, 0.85, 0.7))
+	io_status_lbl.add_theme_color_override("font_color", UI.ACCENT)
 	left_vbox.add_child(io_status_lbl)
 
 	_build_file_dialogs()
@@ -176,10 +173,10 @@ func _build_ui() -> void:
 	prop_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
 
 	var p_style := StyleBoxFlat.new()
-	p_style.bg_color = Color(0.09, 0.12, 0.17, 0.95)
-	p_style.border_color = Color(0.2, 0.35, 0.5, 0.8)
+	p_style.bg_color = UI.PANEL
+	p_style.border_color = UI.BORDER
 	p_style.set_border_width_all(2)
-	p_style.set_corner_radius_all(12)
+	p_style.set_corner_radius_all(0)
 	p_style.content_margin_left = 28
 	p_style.content_margin_right = 28
 	p_style.content_margin_top = 20
@@ -194,7 +191,7 @@ func _build_ui() -> void:
 	var form_title := Label.new()
 	form_title.text = "关卡详细属性设置"
 	form_title.add_theme_font_size_override("font_size", 18)
-	form_title.add_theme_color_override("font_color", Color(0.3, 0.9, 0.7))
+	form_title.add_theme_color_override("font_color", UI.ACCENT)
 	form_vbox.add_child(form_title)
 
 	# Level ID
@@ -390,7 +387,7 @@ func _set_io_status(text: String, is_error := false) -> void:
 	if io_status_lbl == null:
 		return
 	io_status_lbl.text = text
-	io_status_lbl.add_theme_color_override("font_color", Color(0.95, 0.5, 0.5) if is_error else Color(0.5, 0.85, 0.7))
+	io_status_lbl.add_theme_color_override("font_color", Color("962929") if is_error else UI.ACCENT)
 
 func _on_export_level() -> void:
 	if selected_index < 0 or selected_index >= levels.size():

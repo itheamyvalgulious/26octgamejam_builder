@@ -4,7 +4,7 @@ func _initialize() -> void:
 	call_deferred("run")
 
 func run() -> void:
-	print("=== RUNNING FULL GESTALT INTEGRATION TEST ===")
+	print("=== RUNNING FULL CONSTRUCT A ME INTEGRATION TEST ===")
 	test_save_manager_and_levels()
 	test_main_menu_scene()
 	test_level_select_scene()
@@ -40,7 +40,7 @@ func test_main_menu_scene() -> void:
 	print("2. Testing MainMenu Scene...")
 	var scene: MainMenu = load("res://scenes/ui/MainMenu.tscn").instantiate()
 	root.add_child(scene)
-	assert(scene.title_label != null and scene.title_label.text.contains("格"), "Title should contain 格式塔")
+	assert(scene.title_label != null and ProjectSettings.get_setting("application/config/name") == "构造一个我", "Title should contain 构造一个我")
 	scene.queue_free()
 	print("   MainMenu scene initialized successfully.")
 

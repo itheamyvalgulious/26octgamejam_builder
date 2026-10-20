@@ -18,7 +18,6 @@ var chapter_title: Label
 var chapter_description: Label
 var detail_title: Label
 var detail_body: RichTextLabel
-var author_label: Label
 var enter_button: Button
 var map_scroll: ScrollContainer
 
@@ -34,7 +33,7 @@ func _ready() -> void:
 	_show_chapter(Campaign.info(levels[previous].level_id)[0] if previous >= 0 else 0)
 	if previous >= 0: _select_level(previous)
 
-func _label(parent: Node, text: String, font_size: int, color := Color("ddebe9")) -> Label:
+func _label(parent: Node, text: String, font_size: int, color := UI.TEXT) -> Label:
 	var label := Label.new()
 	label.text = text
 	label.add_theme_font_size_override("font_size", font_size)
@@ -47,7 +46,7 @@ func _style(color: Color, border: Color) -> StyleBoxFlat:
 	style.bg_color = color
 	style.border_color = border
 	style.set_border_width_all(2)
-	style.set_corner_radius_all(8)
+	style.set_corner_radius_all(0)
 	style.content_margin_left = 12
 	style.content_margin_right = 12
 	style.content_margin_top = 12
@@ -55,21 +54,27 @@ func _style(color: Color, border: Color) -> StyleBoxFlat:
 	return style
 
 func _build_ui() -> void:
-	var bg := ColorRect.new()
-	bg.color = Color("0c171e")
-	bg.set_anchors_preset(PRESET_FULL_RECT)
-	add_child(bg)
+	UI.add_lab_background(self)
 	var margin := MarginContainer.new()
 	margin.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
-	for side in ["left", "right", "top", "bottom"]: margin.add_theme_constant_override("margin_" + side, 24)
+	for side in ["left", "right", "top", "bottom"]: margin.add_theme_constant_override("margin_" + side, 32)
+	margin.add_theme_constant_override("margin_left", 96)
 	add_child(margin)
 	var layout := VBoxContainer.new()
 	layout.add_theme_constant_override("separation", 16)
 	margin.add_child(layout)
 	var header := HBoxContainer.new()
 	layout.add_child(header)
-	var heading := _label(header, "格式塔  /  构装群岛", 28, Color("91e6c8"))
-	heading.size_flags_horizontal = SIZE_EXPAND_FILL
+	var heading := _label(header, "构造一个我", 30, UI.ACCENT)
+	heading.name = "GameName"
+	var rounded_font := SystemFont.new()
+	rounded_font.font_names = PackedStringArray(["YouYuan", "幼圆", "Yuanti SC", "Hiragino Maru Gothic ProN"])
+	rounded_font.fallbacks = [UI.get_theme().default_font]
+	heading.add_theme_font_override("font", rounded_font)
+	heading.add_theme_color_override("font_outline_color", UI.ACCENT)
+	heading.add_theme_constant_override("outline_size", 1)
+	var subtitle := _label(header, "  /  章节地图", 24, UI.TEXT)
+	subtitle.size_flags_horizontal = SIZE_EXPAND_FILL
 	var manual := Button.new()
 	manual.text = "操作手册 · F1"
 	manual.pressed.connect(func(): get_node("/root/OperationManual").open())
@@ -100,7 +105,7 @@ func _build_ui() -> void:
 	left.size_flags_horizontal = SIZE_EXPAND_FILL
 	body.add_child(left)
 	chapter_title = _label(left, "", 24)
-	chapter_description = _label(left, "", 15, Color("96b0b8"))
+	chapter_description = _label(left, "", 15, UI.MUTED)
 	chapter_description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	map_scroll = ScrollContainer.new()
 	map_scroll.size_flags_vertical = SIZE_EXPAND_FILL
@@ -108,31 +113,23 @@ func _build_ui() -> void:
 	map = MapScript.new()
 	map.custom_minimum_size = Vector2(750, 350)
 	map_scroll.add_child(map)
-	_label(left, "实线：主线    虚线：可选支线    ✓：已通关\n点击节点查看详情 · 地图可滚动", 14, Color("96b0b8"))
+	_label(left, "实线：主线    虚线：可选支线    ✓：已通关\n点击节点查看详情 · 地图可滚动", 14, UI.MUTED)
 	var panel := PanelContainer.new()
 	panel.custom_minimum_size.x = 330
-	panel.add_theme_stylebox_override("panel", _style(Color("152630"), Color("35545c")))
+	panel.add_theme_stylebox_override("panel", _style(UI.PANEL, UI.BORDER))
 	body.add_child(panel)
 	var details := VBoxContainer.new()
 	details.add_theme_constant_override("separation", 18)
 	panel.add_child(details)
-	_label(details, "关卡档案", 14, Color("91e6c8"))
+	_label(details, "关卡档案", 14, UI.ACCENT)
 	detail_title = _label(details, "选择一个节点", 24)
 	detail_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	detail_body = RichTextLabel.new()
 	detail_body.size_flags_vertical = SIZE_EXPAND_FILL
 	detail_body.bbcode_enabled = false
-	detail_body.add_theme_color_override("default_color", Color("ddebe9"))
+	detail_body.add_theme_color_override("default_color", UI.TEXT)
 	detail_body.add_theme_font_size_override("normal_font_size", 16)
 	details.add_child(detail_body)
-	author_label = _label(details, "", 17, Color("a8bec5"))
-	author_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	author_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	var author_font := SystemFont.new()
-	author_font.font_names = PackedStringArray(["KaiTi", "STKaiti", "Noto Serif CJK SC", "serif"])
-	author_font.fallbacks = [UI.get_theme().default_font]
-	author_label.add_theme_font_override("font", author_font)
-	author_label.hide()
 	enter_button = Button.new()
 	enter_button.text = "进入关卡 →"
 	UI.game_primary(enter_button)
@@ -155,11 +152,11 @@ func _show_chapter(index: int) -> void:
 	detail_title.text = "选择一个节点"
 	detail_body.clear()
 	detail_body.add_text("点击地图上的关卡，查看目标与核心机制。\n\n主线帮助你逐步掌握构装，支线可以随时尝试。")
-	author_label.hide()
 	chapter_title.text = Campaign.CHAPTERS[index][1] if index < Campaign.CHAPTERS.size() else "自由工坊"
 	chapter_description.text = Campaign.CHAPTERS[index][2] if index < Campaign.CHAPTERS.size() else "未编入章节的自制关卡也会保留在这里。"
 	for i in range(chapter_buttons.size()):
-		chapter_buttons[i].modulate = Color("91e6c8") if i == index else Color.WHITE
+		chapter_buttons[i].toggle_mode = true
+		chapter_buttons[i].set_pressed_no_signal(i == index)
 	for child in map.get_children():
 		map.remove_child(child)
 		child.queue_free()
@@ -230,7 +227,7 @@ func _select_level(index: int) -> void:
 	var level := levels[index]
 	for id in node_buttons:
 		node_buttons[id].set_pressed_no_signal(id == level.level_id)
-		node_buttons[id].get_node("FolderLabel").add_theme_color_override("font_color", Color("b2f0cd") if id == level.level_id else Color("dce8ed"))
+		node_buttons[id].get_node("FolderLabel").add_theme_color_override("font_color", UI.ACCENT if id == level.level_id else UI.TEXT)
 	var data := Campaign.info(level.level_id)
 	var level_title := Campaign.title(level)
 	detail_title.text = level_title if not level_title.is_empty() else data[1]
@@ -243,13 +240,11 @@ func _select_level(index: int) -> void:
 		detail_body.add_text(Campaign.unlock_description(level.level_id) + "\n\n")
 	for section in [["目标", goal], ["核心机制", data[6]]]:
 		detail_body.push_font_size(18)
-		detail_body.push_color(Color("b2e9d6"))
+		detail_body.push_color(UI.ACCENT)
 		detail_body.add_text(str(section[0]))
 		detail_body.pop()
 		detail_body.pop()
 		detail_body.add_text("\n" + str(section[1]) + "\n\n")
-	author_label.text = "作者  " + (level.author if not level.author.is_empty() else "佚名")
-	author_label.show()
 	enter_button.disabled = not Campaign.is_unlocked(level.level_id)
 	enter_button.text = "进入关卡 →" if not enter_button.disabled else "暂未开放"
 	node_buttons[level.level_id].grab_focus()
@@ -276,7 +271,7 @@ func _configure_folder_node(button: Button, caption: String) -> void:
 		button.add_theme_stylebox_override(state, StyleBoxEmpty.new())
 	var focus := StyleBoxFlat.new()
 	focus.bg_color = Color.TRANSPARENT
-	focus.border_color = Color("b2f0cd")
+	focus.border_color = UI.ACCENT
 	focus.set_border_width_all(2)
 	focus.set_corner_radius_all(8)
 	button.add_theme_stylebox_override("focus", focus)
@@ -304,10 +299,10 @@ func _configure_folder_node(button: Button, caption: String) -> void:
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	label.add_theme_font_size_override("font_size", 15)
-	label.add_theme_color_override("font_color", Color("dce8ed"))
+	label.add_theme_color_override("font_color", UI.TEXT)
 	button.add_child(label)
 	button.mouse_entered.connect(func(): icon.texture = open_texture)
 	button.mouse_exited.connect(func(): icon.texture = closed_texture)
 	button.toggled.connect(func(selected: bool):
-		label.add_theme_color_override("font_color", Color("b2f0cd") if selected else Color("dce8ed"))
+		label.add_theme_color_override("font_color", UI.ACCENT if selected else UI.TEXT)
 	)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Gestalt (格式塔) - Web Debug Server
+构造一个我 - Web Debug Server
 Provides an HTTP/HTTPS server with:
 1. Cross-Origin-Opener-Policy (COOP) and Cross-Origin-Embedder-Policy (COEP)
 2. Automatic SSL/HTTPS certificate generation for Secure Context
@@ -223,7 +223,7 @@ def generate_self_signed_cert(cert_dir):
             return None, None
     return cert_path, key_path
 
-class GestaltServer(ThreadingHTTPServer):
+class ConstructAMeServer(ThreadingHTTPServer):
     daemon_threads = True
 
     def handle_error(self, request, client_address):
@@ -237,7 +237,7 @@ def run_server(web_dir, port=8060, use_https=False, open_browser=True, host="0.0
     handler = lambda *args, **kwargs: GodotWebHandler(*args, directory=web_dir, **kwargs)
 
     try:
-        httpd = GestaltServer((host, actual_port), handler)
+        httpd = ConstructAMeServer((host, actual_port), handler)
     except Exception as e:
         print(f"❌ 启动 Web 服务器失败: {e}")
         return
@@ -259,7 +259,7 @@ def run_server(web_dir, port=8060, use_https=False, open_browser=True, host="0.0
     url_host = host if host not in ("0.0.0.0", "::", "") else "localhost"
     url = f"{protocol}://{url_host}:{actual_port}"
     print(f"\n=======================================================")
-    print(f"  🌿《格式塔》(Gestalt) Web 端调试服务器已启动！")
+    print(f"  🌿《构造一个我》 Web 端调试服务器已启动！")
     print(f"  🌐 访问地址: {url}")
     print(f"  📂 网页目录: {os.path.abspath(web_dir)}")
     print(f"  ⚙  模式: {protocol.upper()} (COOP/COEP 隔离标头已就绪)")
@@ -295,7 +295,7 @@ def run_server(web_dir, port=8060, use_https=False, open_browser=True, host="0.0
         shutdown_server()
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Gestalt Godot 4 Web Debug Server")
+    parser = argparse.ArgumentParser(description="ConstructAMe Godot 4 Web Debug Server")
     parser.add_argument("--dir", default="build/web", help="Directory containing exported Web files")
     parser.add_argument("--port", type=int, default=8060, help="Port to serve on (default: 8060)")
     parser.add_argument("--https", action="store_true", help="Enable HTTPS with self-signed certificate")

@@ -1,6 +1,10 @@
-# 《格式塔》(Gestalt) — 生物机械构装解谜
+# 《构造一个我》 — 生物机械构装解谜
 
 使用 Godot 4 和 GDScript 开发的网格构装解谜游戏。玩家是从一群细胞中觉醒的意识，通过控制不同功能的细胞，在培养皿中连接身体、清除污染、回收目标，并搭建能够自主运行的结构。
+
+游戏现名《构造一个我》。发布文件使用 `ConstructAMe` 作为 ASCII 文件名标识。为兼容已有进度、蓝图和设置，内部存档目录仍保留旧名称；Windows 下为 `%APPDATA%/Godot/app_userdata/格式塔 (Gestalt)/`，无需移动旧存档。
+
+界面统一使用主菜单的实验室蓝色与细胞绿色：共享配色和按钮样式位于 `scripts/ui/UIStyle.gd`，选关与工坊复用主菜单的像素边框。博士对话采用浅蓝正文面板、深色文字和独立深蓝名牌。
 
 研究员塔洛斯负责早期引导。随着玩家学会更多机制，她逐渐从教导转向观察和好奇，玩家也开始独立探索。
 
@@ -161,8 +165,8 @@ GODOT_BIN=/path/to/godot ./build_release.sh
 
 产物：
 
-- `build/release/windows/Gestalt.exe` 与 `build/release/Gestalt-<版本>-windows-x86_64.zip`
-- `build/release/linux/Gestalt.x86_64` 与 `build/release/Gestalt-<版本>-linux-x86_64.tar.gz`
+- `build/release/windows/ConstructAMe.exe` 与 `build/release/ConstructAMe-<版本>-windows-x86_64.zip`
+- `build/release/linux/ConstructAMe.x86_64` 与 `build/release/ConstructAMe-<版本>-linux-x86_64.tar.gz`
 
 ### 网页端
 
@@ -172,7 +176,7 @@ GODOT_BIN=/path/to/godot ./build_release.sh
 ./publish_web.sh --zip-only   # 仅用现有产物打包
 ```
 
-产物：`build/web-release/` 与 `build/release/Gestalt-<版本>-web.zip`。上传到静态托管时需保留 COOP/COEP 隔离标头（`Cross-Origin-Opener-Policy: same-origin` 与 `Cross-Origin-Embedder-Policy: require-corp`）。
+产物：`build/web-release/` 与 `build/release/ConstructAMe-<版本>-web.zip`。上传到静态托管时需保留 COOP/COEP 隔离标头（`Cross-Origin-Opener-Policy: same-origin` 与 `Cross-Origin-Embedder-Policy: require-corp`）。
 
 ### 关卡导入 / 导出
 

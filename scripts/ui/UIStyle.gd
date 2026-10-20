@@ -1,30 +1,40 @@
 extends RefCounted
 
-const BG := Color("6b5d69")
-const PANEL := Color("bdbebe")
-const BORDER := Color("111111")
-const TEXT := Color("151515")
-const MUTED := Color("4b4b4b")
-const ACCENT := Color("202020")
+# Laboratory blue / cell green. Keep text dark on the light instrument panels.
+const BG := Color("60b3e5")
+const PANEL := Color("c9eafa")
+const BORDER := Color("20577b")
+const TEXT := Color("12344b")
+const MUTED := Color("375e73")
+const ACCENT := Color("205a25")
+const INPUT := Color("eff9fe")
 static var shared_theme: Theme
-static var game_theme: Theme
 
-static func box(fill: Color, border := BORDER, radius := 0, padding := 10) -> StyleBoxFlat:
+static func box(fill: Color, border := BORDER, _radius := 0, padding := 10) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 	style.bg_color = fill
 	style.border_color = border
-	style.set_border_width_all(1)
-	style.set_corner_radius_all(radius)
+	style.set_border_width_all(2)
 	style.content_margin_left = padding
 	style.content_margin_right = padding
 	style.content_margin_top = 8
 	style.content_margin_bottom = 8
 	return style
 
-# 无背景图的按钮一律无边框，仅靠背景色区分状态（normal/hover/pressed/disabled）。
-static func flat(fill: Color, radius := 0, padding := 10) -> StyleBoxFlat:
-	var style := box(fill, Color.TRANSPARENT, radius, padding)
-	style.set_border_width_all(0)
+static func flat(fill: Color, _radius := 0, padding := 10) -> StyleBoxFlat:
+	var style := box(fill, BORDER, 0, padding)
+	style.border_width_bottom = 3
+	return style
+
+static func cell_button(tint := Color.WHITE) -> StyleBoxTexture:
+	var style := StyleBoxTexture.new()
+	style.texture = load("res://scenes/animation/button_clean.png")
+	style.modulate_color = tint
+	for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
+		style.set_texture_margin(side, 28)
+		style.set_content_margin(side, 22 if side in [SIDE_TOP, SIDE_BOTTOM] else 18)
+	style.axis_stretch_horizontal = StyleBoxTexture.AXIS_STRETCH_MODE_TILE_FIT
+	style.axis_stretch_vertical = StyleBoxTexture.AXIS_STRETCH_MODE_TILE_FIT
 	return style
 
 static func get_theme() -> Theme:
@@ -32,85 +42,65 @@ static func get_theme() -> Theme:
 	shared_theme = Theme.new()
 	shared_theme.default_font = load("res://assets/fonts/font.ttf")
 	shared_theme.default_font_size = 16
-	for type in ["Label", "Button", "LineEdit", "TextEdit", "RichTextLabel", "CheckButton", "ItemList"]:
+	for type in ["Label", "Button", "LineEdit", "TextEdit", "RichTextLabel", "CheckButton", "CheckBox", "ItemList", "OptionButton", "SpinBox"]:
 		shared_theme.set_color("font_color", type, TEXT)
-	shared_theme.set_stylebox("normal", "Button", flat(Color("b7b8b8"), 0, 10))
-	shared_theme.set_stylebox("hover", "Button", flat(Color("d1d2d2"), 0, 10))
-	shared_theme.set_stylebox("pressed", "Button", flat(Color("8d8e8e"), 0, 10))
-	shared_theme.set_stylebox("disabled", "Button", flat(Color("969797"), 0, 10))
-	shared_theme.set_color("font_disabled_color", "Button", Color("5a5a5a"))
-	shared_theme.set_color("font_hover_color", "Button", TEXT)
-	shared_theme.set_color("font_pressed_color", "Button", TEXT)
-	var focus := box(Color.TRANSPARENT, BORDER, 0, 10)
-	focus.set_border_width_all(2)
+	shared_theme.set_color("default_color", "RichTextLabel", TEXT)
+	for type in ["Button", "OptionButton"]:
+		shared_theme.set_stylebox("normal", type, flat(Color("a8daf3")))
+		shared_theme.set_stylebox("hover", type, flat(Color("e5f6ff")))
+		shared_theme.set_stylebox("pressed", type, flat(Color("a4e766")))
+		shared_theme.set_stylebox("hover_pressed", type, flat(Color("bcf48a")))
+		shared_theme.set_stylebox("disabled", type, flat(Color("b8cdd4")))
+		for state in ["font_hover_color", "font_pressed_color", "font_hover_pressed_color"]:
+			shared_theme.set_color(state, type, TEXT)
+		shared_theme.set_color("font_disabled_color", type, Color("506775"))
+	var focus := box(Color.TRANSPARENT, Color("174566"))
+	focus.set_border_width_all(3)
 	shared_theme.set_stylebox("focus", "Button", focus)
 	for type in ["PanelContainer", "PopupPanel", "PopupMenu", "AcceptDialog"]:
 		shared_theme.set_stylebox("panel", type, box(PANEL))
 	for type in ["LineEdit", "TextEdit", "ItemList"]:
-		shared_theme.set_stylebox("normal", type, box(BG))
-		shared_theme.set_stylebox("focus", type, focus)
-	shared_theme.set_stylebox("panel", "TooltipPanel", box(PANEL, BORDER, 0))
+		shared_theme.set_stylebox("normal", type, box(INPUT))
+		shared_theme.set_stylebox("focus", type, box(INPUT, ACCENT))
+		shared_theme.set_color("font_selected_color", type, TEXT)
+		shared_theme.set_color("selection_color", type, Color("b2e783"))
+	for type in ["LineEdit", "TextEdit"]:
+		shared_theme.set_stylebox("read_only", type, box(Color("d4e3eb")))
+		shared_theme.set_color("font_uneditable_color", type, MUTED)
+		shared_theme.set_color("font_readonly_color", type, MUTED)
+	shared_theme.set_stylebox("panel", "ItemList", box(INPUT))
+	shared_theme.set_stylebox("selected", "ItemList", box(Color("b2e783"), ACCENT))
+	shared_theme.set_stylebox("selected_focus", "ItemList", box(Color("b2e783"), ACCENT))
+	shared_theme.set_stylebox("panel", "TooltipPanel", box(INPUT))
 	shared_theme.set_color("font_color", "TooltipLabel", TEXT)
 	shared_theme.set_font_size("font_size", "TooltipLabel", 15)
-	
-	# TabBar & TabContainer
-	shared_theme.set_color("font_selected_color", "TabBar", ACCENT)
-	shared_theme.set_color("font_unselected_color", "TabBar", MUTED)
-	shared_theme.set_color("font_hovered_color", "TabBar", TEXT)
-	shared_theme.set_stylebox("tab_selected", "TabBar", flat(Color("d0d1d1"), 0, 16))
-	shared_theme.set_stylebox("tab_unselected", "TabBar", flat(Color("a4a5a5"), 0, 16))
-	shared_theme.set_stylebox("tab_hovered", "TabBar", flat(Color("c4c5c5"), 0, 16))
-	shared_theme.set_stylebox("panel", "TabContainer", box(PANEL, BORDER, 0, 16))
+	shared_theme.set_color("font_color", "PopupMenu", TEXT)
+	shared_theme.set_color("font_hover_color", "PopupMenu", TEXT)
+	shared_theme.set_stylebox("hover", "PopupMenu", flat(Color("b2e783")))
+	for type in ["TabBar", "TabContainer"]:
+		shared_theme.set_color("font_selected_color", type, ACCENT)
+		shared_theme.set_color("font_unselected_color", type, MUTED)
+		shared_theme.set_color("font_hovered_color", type, TEXT)
+		shared_theme.set_stylebox("tab_selected", type, flat(Color("b2e783"),0,16))
+		shared_theme.set_stylebox("tab_unselected", type, flat(Color("99cfe9"),0,16))
+		shared_theme.set_stylebox("tab_hovered", type, flat(INPUT,0,16))
+	shared_theme.set_stylebox("panel", "TabContainer", box(PANEL,BORDER,0,16))
 	return shared_theme
 
 static func get_game_theme() -> Theme:
-	if game_theme != null: return game_theme
-	game_theme = Theme.new()
-	game_theme.default_font = load("res://assets/fonts/font.ttf")
-	game_theme.default_font_size = 16
-	var game_text := Color("d8edf0")
-	for type in ["Label", "Button", "LineEdit", "TextEdit", "RichTextLabel", "CheckButton", "ItemList"]:
-		game_theme.set_color("font_color", type, game_text)
-	game_theme.set_stylebox("normal", "Button", flat(Color("17333d"), 4, 10))
-	game_theme.set_stylebox("hover", "Button", flat(Color("245263"), 4, 10))
-	game_theme.set_stylebox("pressed", "Button", flat(Color("0f252d"), 4, 10))
-	game_theme.set_stylebox("disabled", "Button", flat(Color("21343a"), 4, 10))
-	game_theme.set_color("font_disabled_color", "Button", Color("759197"))
-	game_theme.set_color("font_hover_color", "Button", game_text)
-	game_theme.set_color("font_pressed_color", "Button", Color.WHITE)
-	var focus := box(Color.TRANSPARENT, Color("80ffd7"), 4, 10)
-	focus.set_border_width_all(2)
-	game_theme.set_stylebox("focus", "Button", focus)
-	for type in ["PanelContainer", "PopupPanel", "PopupMenu", "AcceptDialog"]:
-		game_theme.set_stylebox("panel", type, box(Color("102a35"), Color("2f7380"), 4))
-	for type in ["LineEdit", "TextEdit", "ItemList"]:
-		game_theme.set_stylebox("normal", type, box(Color("102a35"), Color("2f7380"), 4))
-		game_theme.set_stylebox("focus", type, focus)
-	game_theme.set_color("font_color", "TooltipLabel", game_text)
-	game_theme.set_stylebox("panel", "TooltipPanel", box(Color("102a35"), Color("2f7380"), 4))
-	# TabBar：与按钮一致的无边框标签页（设置菜单、操作手册使用）
-	game_theme.set_color("font_selected_color", "TabBar", game_text)
-	game_theme.set_color("font_unselected_color", "TabBar", Color("7fa3ad"))
-	game_theme.set_color("font_hovered_color", "TabBar", game_text)
-	game_theme.set_stylebox("tab_selected", "TabBar", flat(Color("1f4a58"), 6, 16))
-	game_theme.set_stylebox("tab_unselected", "TabBar", flat(Color("132b34"), 6, 16))
-	game_theme.set_stylebox("tab_hovered", "TabBar", flat(Color("17333d"), 6, 16))
-	game_theme.set_stylebox("panel", "TabContainer", box(Color("102a35"), Color("2f7380"), 4, 16))
-	return game_theme
+	return get_theme()
 
 static func primary(button: Button) -> void:
-	button.add_theme_stylebox_override("normal", flat(Color("d0d1d1"), 0))
-	button.add_theme_stylebox_override("hover", flat(Color("e0e1e1"), 0))
-	button.add_theme_stylebox_override("pressed", flat(Color("969797"), 0))
+	button.custom_minimum_size.y = maxf(button.custom_minimum_size.y, 60.0)
+	button.add_theme_stylebox_override("normal", cell_button())
+	button.add_theme_stylebox_override("hover", cell_button(Color(1.08,1.08,1.02)))
+	button.add_theme_stylebox_override("pressed", cell_button(Color(0.82,0.92,0.75)))
+	button.add_theme_stylebox_override("disabled", cell_button(Color(0.68,0.76,0.66)))
 	for state in ["font_color", "font_hover_color", "font_pressed_color"]:
-		button.add_theme_color_override(state, TEXT)
+		button.add_theme_color_override(state, Color("18340d"))
 
 static func game_primary(button: Button) -> void:
-	button.add_theme_stylebox_override("normal", flat(Color("245263"), 4))
-	button.add_theme_stylebox_override("hover", flat(Color("357083"), 4))
-	button.add_theme_stylebox_override("pressed", flat(Color("173b48"), 4))
-	for state in ["font_color", "font_hover_color", "font_pressed_color"]:
-		button.add_theme_color_override(state, Color("e9ffff"))
+	primary(button)
 
 static func label(parent: Node, text: String, size := 16, color := TEXT) -> Label:
 	var node := Label.new()
@@ -119,3 +109,42 @@ static func label(parent: Node, text: String, size := 16, color := TEXT) -> Labe
 	node.add_theme_color_override("font_color", color)
 	parent.add_child(node)
 	return node
+
+static func add_lab_background(parent: Control) -> void:
+	var bg := TextureRect.new()
+	bg.name = "LabBackground"
+	bg.texture = load("res://scenes/animation/background/mid.png")
+	bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	bg.stretch_mode = TextureRect.STRETCH_TILE
+	bg.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+	bg.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	parent.add_child(bg)
+	# Same corner and edge artwork as the title screen.
+	var pieces = [
+		["left_up",0,0,0,0,0,0,128,128],
+		["right_up",1,0,1,0,-128,0,0,128],
+		["left_low",0,1,0,1,0,-128,128,0],
+		["right_low",1,1,1,1,-128,-128,0,0],
+		["horizontal edge_up",0,0,1,0,128,0,-128,128],
+		["horizontal edge_low",0,1,1,1,128,-128,-128,0],
+		["Vertical edge_left",0,0,0,1,0,128,128,-128],
+		["Vertical edge_right",1,0,1,1,-128,128,0,-128]]
+	for data in pieces:
+		var piece := TextureRect.new()
+		piece.texture = load("res://scenes/animation/background/%s.png" % data[0])
+		piece.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		piece.stretch_mode = TextureRect.STRETCH_TILE
+		piece.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+		piece.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		piece.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		piece.anchor_left = data[1]
+		piece.anchor_top = data[2]
+		piece.anchor_right = data[3]
+		piece.anchor_bottom = data[4]
+		piece.offset_left = data[5]
+		piece.offset_top = data[6]
+		piece.offset_right = data[7]
+		piece.offset_bottom = data[8]
+		bg.add_child(piece)

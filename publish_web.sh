@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# 《格式塔》(Gestalt) - 网页端正式发布脚本
+# 《构造一个我》 - 网页端正式发布脚本
 # ------------------------------------------------------------------------------
 # 与 start.sh 的调试流程不同：本脚本使用 --export-release 与发布模板构建正式的
 # Web 包（产物在 build/web-release），并生成可分发的压缩包。发布版不会把玩家的
@@ -85,7 +85,7 @@ if [ "$ZIP_ONLY" = false ]; then
     fi
 
     echo "======================================================="
-    echo "  《格式塔》网页端正式发布"
+    echo "  《构造一个我》网页端正式发布"
     echo "  引擎    : $GODOT_EXEC"
     echo "  产物目录: $OUTPUT_DIR"
     echo "  版本标签: $VERSION"
@@ -109,7 +109,7 @@ else
     fi
 fi
 
-ZIP_PATH="$PROJECT_DIR/build/release/Gestalt-${VERSION}-web.zip"
+ZIP_PATH="$PROJECT_DIR/build/release/ConstructAMe-${VERSION}-web.zip"
 if [ "$ZIP" = true ]; then
     mkdir -p "$(dirname "$ZIP_PATH")"
     rm -f "$ZIP_PATH"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# 《格式塔》(Gestalt) - 正式版桌面端编译打包脚本 (Windows / Linux)
+# 《构造一个我》 - 正式版桌面端编译打包脚本 (Windows / Linux)
 # ------------------------------------------------------------------------------
 # 与 start.sh 的调试流程不同：本脚本使用 --export-release + 官方发布模板构建
 # 正式版，并打成可直接分发的压缩包。发布版中玩家的关卡编辑只写入用户目录，
@@ -76,7 +76,7 @@ if [ -z "$VERSION" ]; then
 fi
 
 echo "======================================================="
-echo "  《格式塔》正式版打包"
+echo "  《构造一个我》正式版打包"
 echo "  引擎      : $GODOT_EXEC"
 echo "  输出目录  : $OUTPUT_DIR"
 echo "  版本标签  : $VERSION"
@@ -105,27 +105,27 @@ PY
 declare -a RESULTS=()
 
 build_windows() {
-    local out="$OUTPUT_DIR/windows/Gestalt.exe"
+    local out="$OUTPUT_DIR/windows/ConstructAMe.exe"
     export_godot "Windows Desktop" "$out"
     if [ "$PACKAGE" = true ] && command -v zip >/dev/null 2>&1; then
-        local zip_path="$OUTPUT_DIR/Gestalt-${VERSION}-windows-x86_64.zip"
+        local zip_path="$OUTPUT_DIR/ConstructAMe-${VERSION}-windows-x86_64.zip"
         rm -f "$zip_path"; zip -j -q "$zip_path" "$out"
         echo "  打包完成: $zip_path"
         RESULTS+=("$zip_path")
     elif [ "$PACKAGE" = true ]; then
-        local zip_path="$OUTPUT_DIR/Gestalt-${VERSION}-windows-x86_64.zip"
-        make_zip "$out" "$zip_path" "Gestalt.exe"
+        local zip_path="$OUTPUT_DIR/ConstructAMe-${VERSION}-windows-x86_64.zip"
+        make_zip "$out" "$zip_path" "ConstructAMe.exe"
         RESULTS+=("$zip_path")
     fi
     RESULTS+=("$out")
 }
 
 build_linux() {
-    local out="$OUTPUT_DIR/linux/Gestalt.x86_64"
+    local out="$OUTPUT_DIR/linux/ConstructAMe.x86_64"
     export_godot "Linux" "$out"
     chmod +x "$out"
     if [ "$PACKAGE" = true ]; then
-        local tarball="$OUTPUT_DIR/Gestalt-${VERSION}-linux-x86_64.tar.gz"
+        local tarball="$OUTPUT_DIR/ConstructAMe-${VERSION}-linux-x86_64.tar.gz"
         rm -f "$tarball"
         tar -czf "$tarball" -C "$(dirname "$out")" "$(basename "$out")"
         echo "  打包完成: $tarball"

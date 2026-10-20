@@ -21,10 +21,10 @@ var edit_progress := 0
 func _init() -> void:
 	theme = UI.get_theme()
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color("#101e2b")
-	style.border_color = Color("#48cbb0")
+	style.bg_color = UI.PANEL
+	style.border_color = UI.BORDER
 	style.set_border_width_all(1)
-	style.set_corner_radius_all(12)
+	style.set_corner_radius_all(0)
 	style.content_margin_left = 18
 	style.content_margin_right = 18
 	style.content_margin_top = 18
@@ -33,12 +33,12 @@ func _init() -> void:
 	var box := VBoxContainer.new()
 	box.add_theme_constant_override("separation", 10)
 	add_child(box)
-	heading = _label(box, 18, Color("#71e5cc"))
-	dialogue = _label(box, 15, Color("#d0dce7"))
+	heading = _label(box, 18, UI.ACCENT)
+	dialogue = _label(box, 15, UI.TEXT)
 	box.add_child(HSeparator.new())
-	progress = _label(box, 13, Color("#71e5cc"))
-	task = _label(box, 15, Color.WHITE)
-	reminder = _label(box, 13, Color("#9aafc2"))
+	progress = _label(box, 13, UI.ACCENT)
+	task = _label(box, 15, UI.TEXT)
+	reminder = _label(box, 13, UI.MUTED)
 	reminder.text = "左键放置 · 右键擦除\nQ / E 调整箭头 · 单步观察结果\n放错了可以擦除；重置保留你的构装。"
 	restart_button = Button.new()
 	restart_button.text = "重新教学"
